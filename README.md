@@ -42,7 +42,7 @@ The plugin elements are created by making use of the **html_writer** and creatin
 The plugin uses the default SQL Moodle database by adding extra conditions to the existant search queries. The queries are spread in two functions **init()**, **initdate()** and **initdaterange()**. The first adds the conditions for **question text** (question title or description), **author** and **last modifier**; the second adds conditions for **single date** **creation date** and **modification date** and the last adds conditions for **a range** of **creation dates** and **modification dates**.
  
 ## Moodle plugin link:
-[https://moodle.org/plugins/local_searchquestions](https://moodle.org/plugins/local_searchquestions)
+[https://github.com/eLearnTK/moodle_local_questionfinder](https://moodle.org/plugins/moodle_local_questionfinder)
 
 Maintaned by: **Ray Morris**
 
