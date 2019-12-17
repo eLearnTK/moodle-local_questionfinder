@@ -22,8 +22,8 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$plugin->version   = 2019121310;
-$plugin->release   = '0.1.0';
+$plugin->version   = 2019121715;
+$plugin->release   = '1.0.0';
 $plugin->maturity  = MATURITY_BETA;
 $plugin->requires  = 2018051700;
 $plugin->component = 'local_questionfinder';
