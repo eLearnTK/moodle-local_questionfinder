@@ -52,9 +52,8 @@ class local_questionfinder_question_bank_search_condition  extends core_question
         $this->searchmodifieddate = optional_param('searchmodifieddate', '', PARAM_TEXT);
         $this->searchmodifieddate2 = optional_param('searchmodifieddate2', '', PARAM_TEXT);
         $this->blockcategory = optional_param('blockcategory', '', PARAM_TEXT);
-        $strfrom = get_string('from', 'local_searchquestions');
-        $strto = get_string('to', 'local_searchquestions');
-
+        // $output .= html_writer::tag('h2', get_string('success', 'local_codechecker'),
+        // array('class' => 'good'));
         if (!empty($this->searchtext)) {
             $this->init();
         }
@@ -79,6 +78,16 @@ class local_questionfinder_question_bank_search_condition  extends core_question
     public function display_options_adv() {
         global $DB;
         global $output;
+        $strsearchbytext = get_string('searchbytext', 'local_questionfinder');
+        $strauthor = get_string('author', 'local_questionfinder');
+        $strquestiontext = get_string('questiontext', 'local_questionfinder');
+        $strlastmodifiedby = get_string('lastmodifiedby', 'local_questionfinder');
+        $strsearchbydate = get_string('searchbydate', 'local_questionfinder');
+        $strcreationdate = get_string('creationdate', 'local_questionfinder');
+        $strmodificationdate = get_string('modificationdate', 'local_questionfinder');
+        $strfrom = get_string('from', 'local_questionfinder');
+        $strto = get_string('to', 'local_questionfinder');
+
         $id = optional_param('id', false, PARAM_INT);
         $questions = $DB->get_record('question', array('id' => $id));
         require_login();
@@ -86,7 +95,7 @@ class local_questionfinder_question_bank_search_condition  extends core_question
 
         // TEXTBOX.
 
-        echo "<h5>Search by text:</h5>";
+        echo "<h5>" . $strsearchbytext . ":</h5>";
         echo html_writer::empty_tag('input', array(
             'name' => 'searchtext', 'id' => 'searchtext', 'class' => 'searchoptions',
             'value' => $this->searchtext
@@ -99,21 +108,21 @@ class local_questionfinder_question_bank_search_condition  extends core_question
             'type' => 'checkbox', 'name' => 'searchauthor', 'id' => 'searchauthor',
             'class' => 'searchoptions', 'value' => 1
         ));
-        echo html_writer::label('Author', 'searchauthor');
+        echo html_writer::label($strauthor, 'searchauthor');
         echo "<br />\n";
 
         echo html_writer::empty_tag('input', array(
             'type' => 'checkbox', 'name' => 'searchanswers', 'id' => 'searchanswers',
             'class' => 'searchoptions', 'value' => 1
         ));
-        echo html_writer::label('Question text', 'searchanswers');
+        echo html_writer::label($strquestiontext, 'searchanswers');
         echo "<br />\n";
 
         echo html_writer::empty_tag('input', array(
             'type' => 'checkbox', 'name' => 'searchmodified', 'id' => 'searchmodified',
             'class' => 'searchoptions', 'value' => 1
         ));
-        echo html_writer::label('Last modified by', 'searchmodified');
+        echo html_writer::label($strlastmodifiedby, 'searchmodified');
         echo "\n";
         echo html_writer::empty_tag('input', array(
             'type' => 'checkbox', 'name' => 'blockcategory', 'id' => 'blockcategory',
@@ -123,19 +132,17 @@ class local_questionfinder_question_bank_search_condition  extends core_question
 
         // CALENDARS.
 
-        echo "<h5>Search by date:</h5>";
-        echo html_writer::label('Creation date:', 'searchcreatedate');
+        echo "<h5>" . $strsearchbydate . ":</h5>";
+        echo html_writer::label($strcreationdate, 'searchcreatedate');
         echo "<br />\n";
-        echo html_writer::label('From: ', 'searchcreatedate');
-        // ...echo html_writer::label('' . $this->strfrom . ': ', 'searchcreatedate');!
+        echo html_writer::label('' . $strfrom . ': ', 'searchcreatedate');
         echo " ";
         echo html_writer::empty_tag('input', array(
             'type' => 'date', 'name' => 'searchcreatedate', 'id' => 'searchcreatedate', 'class' => 'searchoptions',
             'value' => $this->searchcreatedate
         ));
         echo " ";
-        echo html_writer::label(' to: ', 'searchcreatedate2');
-        // ...echo html_writer::label('' . $strto . ': ', 'searchcreatedate');!
+        echo html_writer::label('' . $strto . ': ', 'searchcreatedate');
         echo " ";
         echo html_writer::empty_tag('input', array(
             'type' => 'date', 'name' => 'searchcreatedate2', 'id' => 'searchcreatedate2', 'class' => 'searchoptions',
@@ -143,16 +150,16 @@ class local_questionfinder_question_bank_search_condition  extends core_question
         ));
         echo  '<br>';
 
-        echo html_writer::label('Modification date:', 'searchmodifieddate');
+        echo html_writer::label($strmodificationdate, 'searchmodifieddate');
         echo "<br />\n";
-        echo html_writer::label('From: ', 'searchcreatedate');
+        echo html_writer::label('' . $strfrom . ': ', 'searchcreatedate');
         echo " ";
         echo html_writer::empty_tag('input', array(
             'type' => 'date', 'name' => 'searchmodifieddate', 'id' => 'searchmodifieddate', 'class' => 'searchoptions',
             'value' => $this->searchmodifieddate
         ));
         echo " ";
-        echo html_writer::label(' to: ', 'searchcreatedate2');
+        echo html_writer::label('' . $strto . ': ', 'searchcreatedate');
         echo " ";
         echo html_writer::empty_tag('input', array(
             'type' => 'date', 'name' => 'searchmodifieddate2', 'id' => 'searchmodifieddate2', 'class' => 'searchoptions',
@@ -197,11 +204,12 @@ class local_questionfinder_question_bank_search_condition  extends core_question
     }
 
     private function initdate() {
+        $strerrormessagedate = get_string('errormessagedate', 'local_questionfinder');
         // ...echo "<script> alert('From initdate')</script>";!
         global $DB;
         if ($this->searchcreatedate && $this->searchmodifieddate) {
             echo "<script>
-                    setTimeout(function(){ alert('Error: select either creation date or Modification date') }, 500)
+                    setTimeout(function(){ alert(" . $strerrormessagedate . ") }, 500)
                   </script>";
             return;
         }
