@@ -21,15 +21,16 @@
  * @copyright 2019 onwards Tobias Kutzner
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+header('Content-Type: text/html; charset=ISO-8859-1');
 
 $string['pluginname'] = 'Fragen Suche';
 $string['searchbytext'] = 'Suche im Text';
 $string['author'] = 'Author';
 $string['questiontext'] = 'Fragetext';
-$string['lastmodifiedby'] = 'Letzte Änderung durch';
+$string['lastmodifiedby'] = 'Letzte Ã„nderung durch';
 $string['searchbydate'] = 'Suche nach Datum';
 $string['creationdate'] = 'Erstellungsdatum';
-$string['modificationdate'] = 'Änderungsdatum';
+$string['modificationdate'] = 'Ã„nderungsdatum';
 $string['from'] = 'von';
 $string['to'] = 'bis';
-$string['errormessagedate'] = 'Fehler: Erstellungsdatum oder Ädernungsdatum eingeben!';
+$string['errormessagedate'] = 'Fehler: Erstellungsdatum oder Ã„nderungsdatum eingeben!';
