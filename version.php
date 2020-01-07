@@ -22,8 +22,8 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$plugin->version   = 2020010713;		// The current plugin version (Date: YYYYMMDDXX)
+$plugin->version   = 2020011314;
 $plugin->release   = '1.1.0';
-$plugin->maturity  = MATURITY_STABLE;
-$plugin->requires  = 2018051700;		// Requires this Moodle version (3.5)
+$plugin->maturity  = MATURITY_BETA;
+$plugin->requires  = 2018051700;
 $plugin->component = 'local_questionfinder';
