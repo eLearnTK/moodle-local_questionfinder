@@ -24,9 +24,9 @@
 
 $string['pluginname'] = 'Question Finder';
 $string['searchbytext'] = 'Search by text';
-$string['author'] = 'Author';
+$string['author'] = 'Author (username)';
 $string['questiontext'] = 'Question text';
-$string['lastmodifiedby'] = 'Last modified by';
+$string['lastmodifiedby'] = 'Last modified by (username)';
 $string['searchbydate'] = 'Search by date';
 $string['creationdate'] = 'Creation date';
 $string['modificationdate'] = 'Modification date';
