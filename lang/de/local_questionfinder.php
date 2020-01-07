@@ -25,9 +25,9 @@ header('Content-Type: text/html; charset=ISO-8859-1');
 
 $string['pluginname'] = 'Fragen Suche';
 $string['searchbytext'] = 'Suche im Text';
-$string['author'] = 'Author';
+$string['author'] = 'Author (Nutzername)';
 $string['questiontext'] = 'Fragetext';
-$string['lastmodifiedby'] = 'Letzte Änderung durch';
+$string['lastmodifiedby'] = 'Letzte Änderung durch (Nutzername)';
 $string['searchbydate'] = 'Suche nach Datum';
 $string['creationdate'] = 'Erstellungsdatum';
 $string['modificationdate'] = 'Änderungsdatum';
