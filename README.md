@@ -13,7 +13,7 @@ chocolate pie recipe
 chocolate and peanut butter bar recipe
 
 ## Changelog:
-Version (1.0.0) adds several search options to the original functionality (Extended by Tobias Kutzner (Moodle Moot DACH 2019: Improve questionbank with better search options for question Tobias Kutzner, Katja Neubehler, Gerhard Schwed), Pedro Rojas):
+Version (1.1.0) adds several search options to the original functionality (Extended by Tobias Kutzner (Moodle Moot DACH 2019: Improve questionbank with better search options for question Tobias Kutzner, Katja Neubehler, Gerhard Schwed), Pedro Rojas):
 
 - Search by Author
 - Search by Last Modified by
