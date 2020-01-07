@@ -1,4 +1,4 @@
-?php
+<?php
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -16,14 +16,14 @@
 
 /**
  * Version information for component 'local_questionfinder'
- * Local Questionfinder is an extended veriosn of Local Searchquestions 
+ *
  * @package   local_questionfinder
- * @copyright 2020 onwards Tobias Kutzner
+ * @copyright 2019 onwards Tobias Kutzner
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$plugin->version   = 2020011314;
+$plugin->version   = 2020010714;
 $plugin->release   = '1.1.0';
-$plugin->maturity  = MATURITY_BETA;
+$plugin->maturity  = MATURITY_STABLE;
 $plugin->requires  = 2018051700;
 $plugin->component = 'local_questionfinder';
