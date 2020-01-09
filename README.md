@@ -1,5 +1,5 @@
 # moodle local questionfinder
-Moodle Local Questionfinder is an extended version of the Question search module for Moodle - Copyright (C) 2014 Ray Morris, this version (1.1.0) adds several search options to the original functionality extended by Tobias Kutzner (Moodle Moot DACH 2019: Improve questionbank with better search options for question Tobias Kutzner, Katja Neubehler, Gerhard Schwed), Pedro Rojas Copyright (C) 2020
+Moodle Local Questionfinder is an extended version of the Question search module for Moodle - Copyright (C) 2014 Ray Morris, this new module adds several search options to the original functionality extended by Tobias Kutzner (Moodle Moot DACH 2019: Improve questionbank with better search options for question Tobias Kutzner, Katja Neubehler, Gerhard Schwed), Pedro Rojas Copyright (C) 2020
 
 ## Description (Original question search module for Moodle - Copyright (C) 2014 Ray Morris):
 Adds text search to the question bank. You can find questions and answers which contain specific words and phrases. Some have used it to find "all of the above" answers by searching for that phrase.  
@@ -43,6 +43,6 @@ The plugin uses the default SQL Moodle database by adding extra conditions to th
 ## Moodle plugin link:
 [https://github.com/eLearnTK/moodle_local_questionfinder](https://moodle.org/plugins/moodle_local_questionfinder)
 
-Maintaned by: **Ray Morris**
+Maintaned by: **Tobias Kutzner, Ray Morris** 
 
 Updated by: **Tobias Kutzner, Pedro Rojas**
