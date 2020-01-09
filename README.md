@@ -1,5 +1,5 @@
-# questionfinder
-Update of original Question search module for Moodle - Copyright (C) 2014 Ray Morris, this version (1.1.0) adds several search options to the original functionality extended by Tobias Kutzner (Moodle Moot DACH 2019: Improve questionbank with better search options for question Tobias Kutzner, Katja Neubehler, Gerhard Schwed), Pedro Rojas Copyright (C) 2020
+# moodle local questionfinder
+Moodle Local Questionfinder is an extended version of the Question search module for Moodle - Copyright (C) 2014 Ray Morris, this version (1.1.0) adds several search options to the original functionality extended by Tobias Kutzner (Moodle Moot DACH 2019: Improve questionbank with better search options for question Tobias Kutzner, Katja Neubehler, Gerhard Schwed), Pedro Rojas Copyright (C) 2020
 
 ## Description (Original question search module for Moodle - Copyright (C) 2014 Ray Morris):
 Adds text search to the question bank. You can find questions and answers which contain specific words and phrases. Some have used it to find "all of the above" answers by searching for that phrase.  
