@@ -52,8 +52,7 @@ class local_questionfinder_question_bank_search_condition  extends core_question
         $this->searchmodifieddate = optional_param('searchmodifieddate', '', PARAM_TEXT);
         $this->searchmodifieddate2 = optional_param('searchmodifieddate2', '', PARAM_TEXT);
         $this->blockcategory = optional_param('blockcategory', '', PARAM_TEXT);
-        // $output .= html_writer::tag('h2', get_string('success', 'local_codechecker'),
-        // array('class' => 'good'));
+
         if (!empty($this->searchtext)) {
             $this->init();
         }
@@ -172,7 +171,6 @@ class local_questionfinder_question_bank_search_condition  extends core_question
     // SQL QUERIES.
 
     private function init() {
-        // ...echo "<script> alert('From init')</script>";!
         $this->searchcreatedate = '';
         $this->searchcreatedate2 = '';
         $this->searchmodifieddate = '';
@@ -184,19 +182,16 @@ class local_questionfinder_question_bank_search_condition  extends core_question
         $this->params['searchtext2'] = $this->params['searchtext1'];
 
         if ($this->searchanswers || $this->blockcategory == "questiontext") {
-            // ...echo "<script> alert('From search in text')</script>";!
             $this->where .= " OR ( q.id IN (SELECT question FROM {question_answers} qa WHERE " .
                 $DB->sql_like('answer', ':searchtext3', false) . ') )';
             $this->params['searchtext3'] = $this->params['searchtext1'];
         }
         if ($this->searchauthor || $this->blockcategory == "author") {
-            // ...echo "<script> alert('From author')</script>";!
             $this->where .= " OR ( q.createdby IN (SELECT u.id FROM {user} u WHERE " .
                 $DB->sql_like('username', ':searchtext3', false) . ') )';
             $this->params['searchtext3'] = $this->params['searchtext1'];
         }
         if ($this->searchmodified || $this->blockcategory == "modifiedby") {
-            // ...echo "<script> alert('From modified by')</script>";!
             $this->where .= " OR ( q.modifiedby IN (SELECT u.id FROM {user} u WHERE " .
                 $DB->sql_like('username', ':searchtext3', false) . ') )';
             $this->params['searchtext3'] = $this->params['searchtext1'];
@@ -205,7 +200,6 @@ class local_questionfinder_question_bank_search_condition  extends core_question
 
     private function initdate() {
         $strerrormessagedate = get_string('errormessagedate', 'local_questionfinder');
-        // ...echo "<script> alert('From initdate')</script>";!
         global $DB;
         if ($this->searchcreatedate && $this->searchmodifieddate) {
             echo "<script>
@@ -214,21 +208,17 @@ class local_questionfinder_question_bank_search_condition  extends core_question
             return;
         }
         if ($this->searchcreatedate) {
-            // ...echo "<script>alert('From created date')</script>";!
             $this->where .= "FROM_UNIXTIME(q.timecreated, '%Y-%m-%d') = '" . $this->searchcreatedate . "'";
             $this->params['searchcreatedate'] = $this->params['searchtext1'];
         }
         if ($this->searchmodifieddate) {
-            // ...echo "<script>alert('From modified date')</script>";!
             $this->where .= "FROM_UNIXTIME(q.timemodified, '%Y-%m-%d') = '" . $this->searchmodifieddate . "'";
             $this->params['searchmodifieddate'] = $this->params['searchtext1'];
         }
     }
 
     private function initdaterange() {
-        // ...echo "<script> alert('From initdaterange')</script>";!
         if ($this->searchcreatedate) {
-            // ...echo "<script>alert('From created date')</script>";!
             $this->searchmodifieddate = '';
             $this->searchmodifieddate2 = '';
             $this->where .= "FROM_UNIXTIME(q.timecreated, '%Y-%m-%d') >= '" . $this->searchcreatedate .
@@ -237,7 +227,6 @@ class local_questionfinder_question_bank_search_condition  extends core_question
             $this->params['searchcreatedate2'] = $this->params['searchtext1'];
         }
         if ($this->searchmodifieddate) {
-            // ...echo "<script>alert('From modified date')</script>";!
             $this->where .= "FROM_UNIXTIME(q.timemodified, '%Y-%m-%d') >= '" . $this->searchmodifieddate .
                 "' AND FROM_UNIXTIME(q.timemodified, '%Y-%m-%d') <= '" . $this->searchmodifieddate2 . "'";
             $this->params['searchmodifieddate'] = $this->params['searchtext1'];
