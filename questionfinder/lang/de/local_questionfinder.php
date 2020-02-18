@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'local_questionfinder', language 'en'
+ * Strings for component 'local_questionfinder', language 'de'
  *
  * @package   local_questionfinder
  * @copyright 2019 onwards Tobias Kutzner
