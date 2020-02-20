@@ -36,12 +36,26 @@ require_once($CFG->dirroot . '/question/editlib.php');
 function local_questionfinder_get_question_bank_search_conditions($caller) {
     return array(new local_questionfinder_question_bank_search_condition($caller));
 }
-
+/**
+ * Main class of the plugin
+ * @copyright Cpyright (c) 2020, Tobias Kutzner, Pedro Rojas
+ * @license http://opensource.org/licenses/gpl-license.php GNU Public License
+ */
 class local_questionfinder_question_bank_search_condition  extends core_question\bank\search\condition {
-    protected $tags;
+    /**  
+     * @var where
+     * Used to define the "where" object in SQL statements
+     */
     protected $where;
+    /**
+     * @var params 
+     * Used to connect search logic output to HTML elements
+     */
     protected $params;
 
+/**
+ * Constructor. Variables are initialized and search conditions are defined based on which inputs are filled by the user
+ */
     public function __construct() {
         $this->searchtext = optional_param('searchtext', '', PARAM_TEXT);
         $this->searchauthor = optional_param('searchauthor', false, PARAM_BOOL);
@@ -65,15 +79,21 @@ class local_questionfinder_question_bank_search_condition  extends core_question
             $this->initdate();
         }
     }
-
+/**
+ * Defines "where" used for building SQL statement strings
+ */
     public function where() {
         return $this->where;
     }
-
+/**
+ * Defines the params variable used to link the search output to the corresponding HTML elements
+ */
     public function params() {
         return $this->params;
     }
-
+/**
+ * Creates the plugins specific HTML elements to be injected to Moodle
+ */
     public function display_options_adv() {
         global $DB;
         global $output;
@@ -169,7 +189,9 @@ class local_questionfinder_question_bank_search_condition  extends core_question
     }
 
     // SQL QUERIES.
-
+/**
+ * Function used for non-date searches
+ */
     private function init() {
         $this->searchcreatedate = '';
         $this->searchcreatedate2 = '';
@@ -197,7 +219,9 @@ class local_questionfinder_question_bank_search_condition  extends core_question
             $this->params['searchtext3'] = $this->params['searchtext1'];
         }
     }
-
+/**
+ * Function used for non-ranged date searches
+ */
     private function initdate() {
         $strerrormessagedate = get_string('errormessagedate', 'local_questionfinder');
         global $DB;
@@ -216,7 +240,9 @@ class local_questionfinder_question_bank_search_condition  extends core_question
             $this->params['searchmodifieddate'] = $this->params['searchtext1'];
         }
     }
-
+/**
+ * Function used for ranged date searches
+ */
     private function initdaterange() {
         if ($this->searchcreatedate) {
             $this->searchmodifieddate = '';
