@@ -23,14 +23,20 @@
  */
 
 $string['pluginname'] = 'Question Finder';
-$string['searchbytext'] = 'Search by text';
-$string['author'] = 'Author (username)';
-$string['questiontext'] = 'Question text';
-$string['lastmodifiedby'] = 'Last modified by (username)';
-$string['searchbydate'] = 'Search by date';
-$string['creationdate'] = 'Creation date';
-$string['modificationdate'] = 'Modification date';
-$string['from'] = 'From';
-$string['to'] = 'to';
+$string['searchbytext'] = 'Search term:';
+$string['username'] = 'Username';
+$string['firstname'] = 'Firstname';
+$string['lastname'] = 'Lastname';
+$string['author'] = ' Importer of the questions:';
+$string['questiontext'] = ' Name of the question (Questiontext)';
+$string['lastmodifiedby'] = ' Last change is made by:';
+$string['searchbydate'] = 'Date search';
+$string['creationdate'] = 'Creation (import):';
+$string['modificationdate'] = 'Last change:';
+$string['from'] = ' from: ';
+$string['to'] = ' to: ';
 $string['errormessagedate'] = 'Error: select either creation date or Modification date';
-
+$string['searchinquestionbank'] = ' Search in the Question Bank';
+$string['applysearch'] = 'Apply search to: ';
+$string['choosetypeofnamesearch'] = 'Choose type of name option: ';
+$string['submitbuttontext'] = 'Search';

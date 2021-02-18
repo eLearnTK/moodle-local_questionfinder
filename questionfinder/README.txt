@@ -1,7 +1,7 @@
 Question finder module for Moodle (http://moodle.org/)
-Copyright (C) 2020 Tobias Kutzner 
+Copyright (C) 2021 Tobias Kutzner 
 (Moodle Moot DACH 2019: 
-Improve questionbank with better search options for question Tobias Kutzner, Katja Neubehler, Gerhard Schwed, Pedro Rojas)
+Improve questionbank with better search options for question Tobias Kutzner, Katja Neubehler, Gerhard Schwed), Pedro Rojas, Eleonora Kostova
 
 Based on the question search module by Ray Morris. 
 Extends the Moodle question bank to find text, and dates of creation or modification in questions via text search.

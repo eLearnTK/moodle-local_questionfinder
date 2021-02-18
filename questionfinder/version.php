@@ -24,8 +24,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2020021813;
-$plugin->release   = '1.1.0';
+$plugin->version   = 2021021815;
+$plugin->release   = '3.1.0';
 $plugin->maturity  = MATURITY_STABLE;
 $plugin->requires  = 2018051700;
 $plugin->component = 'local_questionfinder';
