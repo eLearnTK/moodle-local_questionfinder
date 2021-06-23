@@ -16,26 +16,19 @@
 
 /**
  * Functions for component 'local_questionfinder'
- *
- * @package   local_questionfinder
- * @copyright 2019 onwards Tobias Kutzner
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    local_questionfinder
+ * @copyright  2013 Ray Morris
+ * @copyright  2019 onwards Tobias Kutzner <Tobias.Kutzner@b-tu.de>
+ * @copyright  2020 onwards Pedro Rojas
+ * @copyright  2020 onwards Eleonora Kostova <Eleonora.Kostova@b-tu.de>
+ * @copyright  based on 2012 work by Felipe Carasso (http://carassonet.org)
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use block_mockblock\search\area;
-use core\oauth2\client;
-use core_search\document;
-use GeoIp2\Record\Location;
-use mod_forum\local\data_mappers\legacy\post;
-
-
-defined('MOODLE_INTERNAL') || die();
-
+defined('MOODLE_INTERNAL') || die;
 
 global $CFG;
 require_once($CFG->dirroot . '/question/editlib.php');
-require_once($CFG->libdir . '/formslib.php');
-
 
 /**
  * Provide an array of search condition classes this plugin implements.
@@ -53,34 +46,14 @@ class local_questionfinder_question_bank_search_condition  extends core_question
     protected $params;
 
     public function __construct() {
-        // Setting the number of items on a page on 1000 and hiding the option for 20 items.
-        if (!isset($_GET['checkbox_QB'])) {
-            if ((strpos($_SERVER['REQUEST_URI'], "&qperpage=1000"))) {
-                $_SERVER['REQUEST_URI'] = str_replace("&qperpage=1000", "", $_SERVER['REQUEST_URI']);
-                echo html_writer::script("
-                location.replace('{$_SERVER['REQUEST_URI']}')");
-            }
-        } else {
-            if (!(strpos($_SERVER['REQUEST_URI'], "&qperpage=1000"))) {
-                if ((strpos($_SERVER['REQUEST_URI'], "&qperpage=20"))) {
-                    $_SERVER['REQUEST_URI'] = str_replace("&qperpage=20", "&qperpage=1000", $_SERVER['REQUEST_URI']);
-                } else {
-                    $_SERVER['REQUEST_URI'] .= ("&qperpage=1000");
-                }
-                if ((strpos($_SERVER['REQUEST_URI'], "&qpage="))) {
-                    $strtoreplace = substr($_SERVER['REQUEST_URI'], strpos($_SERVER['REQUEST_URI'], "&qpage="), strlen("&qpage= "));
-                    $_SERVER['REQUEST_URI'] = str_replace($strtoreplace, "", $_SERVER['REQUEST_URI']);
-                }
-                echo html_writer::script("
-                 location.replace('{$_SERVER['REQUEST_URI']}')");
-            }
-            echo html_writer::script("
-            window.addEventListener('load', function(event) {
-                console.log(document.getElementsByClassName('paging')[0]);
-                if(document.getElementsByClassName('paging')[0]){
-                    (document.getElementsByClassName('paging')[0]).style.display='none';
-                } });");
-        }
+        global $PAGE;
+
+        $this->serverurl = optional_param('REQUEST_URI', $_SERVER['REQUEST_URI'], PARAM_TEXT);
+        $this->format = optional_param('format', '', PARAM_TEXT);
+        $this->formatname = optional_param('format_name', '', PARAM_TEXT);
+        $this->checkbox = optional_param('checkbox_QB', '', PARAM_BOOL);
+        $this->checkboxcreation = optional_param('checkbox_creation', '', PARAM_BOOL);
+        $this->checkboxmodified = optional_param('checkbox_modified', '', PARAM_BOOL);
         $this->searchtext = optional_param('searchtext', '', PARAM_TEXT);
         $this->username = optional_param('username', false, PARAM_BOOL);
         $this->firstname = optional_param('firstname', false, PARAM_BOOL);
@@ -92,20 +65,55 @@ class local_questionfinder_question_bank_search_condition  extends core_question
         $this->searchcreatedate2 = optional_param_array('searchcreatedate2', '', PARAM_TEXT);
         $this->searchmodifieddate = optional_param_array('searchmodifieddate', '', PARAM_TEXT);
         $this->searchmodifieddate2 = optional_param_array('searchmodifieddate2', '', PARAM_TEXT);
-        if (isset($_GET['format'])) {
-            if ($_GET['format'] != 'creation' && $_GET['format'] != 'modified') {
+
+        // Setting the number of items on a page on 1000 and hiding the option for 20 items.
+        if (!$this->checkbox) {
+            if ((strpos($this->serverurl, "&qperpage=1000"))) {
+                $this->serverurl = str_replace("&qperpage=1000", "", $this->serverurl);
+
+                $PAGE->requires->js_call_amd(
+                    "local_questionfinder/buttonsAction",
+                    "replacelocationurl",
+                    array("url" => $this->serverurl)
+                );
+            }
+        } else {
+            if (!(strpos($this->serverurl, "&qperpage=1000"))) {
+                if ((strpos($this->serverurl, "&qperpage=20"))) {
+                    $this->serverurl = str_replace("&qperpage=20", "&qperpage=1000", $this->serverurl);
+                } else {
+                    $this->serverurl .= ("&qperpage=1000");
+                }
+                if ((strpos($this->serverurl, "&qpage="))) {
+                    $strtoreplace = substr($this->serverurl, strpos($this->serverurl, "&qpage="), strlen("&qpage= "));
+                    $this->serverurl = str_replace($strtoreplace, "", $this->serverurl);
+                }
+                $PAGE->requires->js_call_amd(
+                    "local_questionfinder/buttonsAction",
+                    "replacelocationurl",
+                    array("url" => $this->serverurl)
+                );
+            }
+
+            $PAGE->requires->js_call_amd("local_questionfinder/buttonsAction", "hidepagging", array());
+        }
+
+        if (($this->format)) {
+            if ($this->format != 'creation' && $this->format != 'modified') {
                 $this->init();
             } else {
 
-                if (isset($_GET['checkbox_creation']) || isset($_GET['checkbox_modified'])) {
+                if (($this->checkboxcreation) || ($this->checkboxmodified)) {
                     if (
-                        !empty(json_encode($_GET['searchcreatedate'])) && !empty(json_encode($_GET['searchcreatedate2'])) ||
-                        !empty(json_encode($_GET['searchmodifieddate'])) && !empty(json_encode($_GET['searchmodifieddate2']))
+                        !empty(json_encode($this->searchcreatedate)) && !empty(json_encode($this->searchcreatedate2)) ||
+                        !empty(json_encode($this->searchmodifieddate)) && !empty(json_encode($this->searchmodifieddate2))
                     ) {
 
                         $this->initdaterange();
                     }
-                } else if (!empty(json_encode($_GET['searchcreatedate'])) || !empty(json_encode($_GET['searchmodifieddate']))) {
+                } else if (
+                    !empty(json_encode($this->searchcreatedate)) || !empty(json_encode($this->searchmodifieddate))
+                ) {
 
                     $this->initdate();
                 }
@@ -114,7 +122,6 @@ class local_questionfinder_question_bank_search_condition  extends core_question
     }
 
     public function where() {
-
         return $this->where;
     }
 
@@ -123,9 +130,8 @@ class local_questionfinder_question_bank_search_condition  extends core_question
     }
 
     public function display_options_adv() {
-        global $DB;
+        global $DB, $PAGE;
 
-        // Initialising labels.
         $strsearchbytext = get_string('searchbytext', 'local_questionfinder');
         $strusername = get_string('username', 'local_questionfinder');
         $strfirstname = get_string('firstname', 'local_questionfinder');
@@ -136,38 +142,39 @@ class local_questionfinder_question_bank_search_condition  extends core_question
         $strsearchbydate = get_string('searchbydate', 'local_questionfinder');
         $strcreationdate = get_string('creationdate', 'local_questionfinder');
         $strmodificationdate = get_string('modificationdate', 'local_questionfinder');
+
         $strfrom = get_string('from', 'local_questionfinder');
         $strto = get_string('to', 'local_questionfinder');
+
         $strsearchinquestionbank = get_string('searchinquestionbank', 'local_questionfinder');
-        $strapplysearch = get_string('applysearch', 'local_questionfinder');
-        $strchoosetypeofnamesearch = get_string('choosetypeofnamesearch', 'local_questionfinder');
         $strsubmitbuttontext = get_string('submitbuttontext', 'local_questionfinder');
 
+        // Form new.
+        $strapplysearchto = get_string('applysearch', 'local_questionfinder');
         $id = optional_param('id', false, PARAM_INT);
         $questions = $DB->get_record('question', array('id' => $id));
         require_login();
-        echo "<hr />\n";
+        echo "<hr />";
 
         // Creating a checkbox for activating the search in the question bank.
         $attr = array(
             'type' => 'checkbox', 'name' => 'checkbox_QB', 'id' => 'id_checkbox_QB',
-            'class' => 'searchoptions mr-1',  'value' => "0"
+            'class' => 'searchoptions mr-1',  'value' => 1
         );
         echo html_writer::empty_tag('input', $attr);
         echo html_writer::label($strsearchinquestionbank, 'checkbox_QB');
 
-        echo  '<br>';
-        echo  '<br>';
-
         // New Form for the advanced search.
         $mform = new MoodleQuickForm('mform_advanced', 'post', '', null, true);
 
-        $this->check_if_option_isset('checkbox_QB', $mform);
-        if (isset($_GET['checkbox_QB'])) {
-            echo html_writer::script("
-                (document.getElementById('id_checkbox_QB')).checked='checked';
-                (document.getElementById('id_checkbox_QB')).value=1;
-            ");
+        $this->check_if_option_isset('checkbox_QB', $mform, $this->checkbox);
+
+        if ($this->checkbox) {
+            $PAGE->requires->js_call_amd(
+                "local_questionfinder/buttonsAction",
+                "checkboxactivitychecked",
+                array()
+            );
         }
 
         // Creating new text field.
@@ -177,7 +184,7 @@ class local_questionfinder_question_bank_search_condition  extends core_question
 
         $mform->setType('searchtext', PARAM_TEXT);
 
-        $this->check_if_option_isset('searchtext', $mform);
+        $this->check_if_option_isset('searchtext', $mform, $this->searchtext);
         // RADIO BUTTONS.
         // Radio buttons for searching on creator or modifier names.
         $radiobuttonsnameoption = array();
@@ -197,68 +204,103 @@ class local_questionfinder_question_bank_search_condition  extends core_question
         $questiontext[] = $mform->createElement('radio', 'format', '', $strquestiontext, 'questiontext', array(''));
 
         $mergedarrayofradiooptions = array_merge($radiobuttonsnameoption, $radiobuttonsnametype, $questiontext);
-        $mform->addGroup($mergedarrayofradiooptions,  "formatchoices",  $strapplysearch, '<div style="top:10px" ></div>', false);
+        $mform->addGroup($mergedarrayofradiooptions,  "formatchoices",  $strapplysearchto, '<div style="top:10px" ></div>', false);
 
-        $this->check_if_option_isset('format_name', $mform);
+        $this->check_if_option_isset('format_name', $mform, $this->formatname);
         // Updating the attributes of the form elements depending on the search.
-        if (!isset($_GET['format'])) {
+        if (!($this->format)) {
             $mform->setDefault('format', "");
             $mform->setDefault('format_name', "");
         } else {
-            if (isset($_GET['checkbox_QB'])) {
-                $mform->setDefault('format', $_GET['format']);
+            if (($this->checkbox)) {
+                $mform->setDefault('format', $this->format);
             }
         }
 
         // CALENDARS.
+        // Date search text.
+        $datesearchtext = array();
+        $datesearchtext[] = $mform->createElement('html', '<div class="w-100" ><br></div>');
+        $mform->addGroup(
+            $datesearchtext,
+            "",
+            $strsearchbydate,
+            '<div style="padding: 5px" ></div>',
+            false
+        );
+
         // Creationdate.
         $creationdate = array();
         $creationdate[] = $mform->createElement('radio', 'format', '', $strfrom, 'creation', '');
         $creationdate[] = $mform->createElement('date_selector', 'searchcreatedate', '', '', $this->searchcreatedate, '');
-        $creationdate[] = $mform->createElement('checkbox', 'checkbox_creation', '', $strto, 'creation_checked', '');
+        $creationdate[] = $mform->createElement('checkbox', 'checkbox_creation', '', $strto, '', '');
         $creationdate[] = $mform->createElement('date_selector', 'searchcreatedate2', '', '',  $this->searchcreatedate2, '');
 
         // Modificationdate.
         $mofificationdate = array();
         $mofificationdate[] = $mform->createElement('radio', 'format', '', $strfrom, 'modified', '');
-        $mofificationdate[] = $mform->createElement('date_selector',
-        'searchmodifieddate', '', $strfrom, $this->searchmodifieddate, '');
-        $mofificationdate[] = $mform->createElement('checkbox', 'checkbox_modified', '', $strto, 'modified_checked', '');
-        $mofificationdate[] = $mform->createElement('date_selector',
-        'searchmodifieddate2', '', $strto, $this->searchmodifieddate2, '');
+        $mofificationdate[] = $mform->createElement(
+            'date_selector',
+            'searchmodifieddate',
+            '',
+            $strfrom,
+            $this->searchmodifieddate,
+            ''
+        );
+        $mofificationdate[] = $mform->createElement('checkbox', 'checkbox_modified', '', $strto, '', '');
+        $mofificationdate[] = $mform->createElement(
+            'date_selector',
+            'searchmodifieddate2',
+            '',
+            $strto,
+            $this->searchmodifieddate2,
+            ''
+        );
 
-        if (!isset($_GET['format'])) {
+        if (!($this->format)) {
             $mform->setDefault('format', "");
         } else {
 
-            if ($_GET['format'] == 'creation') {
-                if (isset($_GET['checkbox_creation'])) {
-                    $mform->setDefault('checkbox_creation', $_GET['checkbox_creation']);
+            if ($this->format == 'creation') {
+                if (($this->checkboxcreation)) {
+                    $mform->setDefault('checkbox_creation', $this->checkboxcreation);
                 } else {
                     $mform->setDefault('checkbox_creation', "");
                 }
-            } else if ($_GET['format'] == 'modified') {
-                if (isset($_GET['checkbox_modified'])) {
-                    $mform->setDefault('checkbox_modified', $_GET['checkbox_modified']);
+            } else if ($this->format == 'modified') {
+                if (($this->checkboxmodified)) {
+                    $mform->setDefault('checkbox_modified', $this->checkboxmodified);
                 } else {
                     $mform->setDefault('checkbox_modified', "");
                 }
             }
         }
 
-        $this->check_if_option_isset('searchcreatedate', $mform);
-        $this->check_if_option_isset('searchcreatedate2', $mform);
-        $this->check_if_option_isset('searchmodifieddate', $mform);
-        $this->check_if_option_isset('searchmodifieddate2', $mform);
-        $mform->addGroup($creationdate,  "formatchoices_date",
-        $strcreationdate, '<div style="padding: 5px" ></div>', false);
-        $mform->addGroup($mofificationdate,  "formatchoices_dates",
-        $strmodificationdate, '<div style="padding: 5px" ></div>', false);
+        $this->check_if_option_isset('searchcreatedate', $mform, $this->searchcreatedate);
+        $this->check_if_option_isset('searchcreatedate2', $mform, $this->searchcreatedate2);
+        $this->check_if_option_isset('searchmodifieddate', $mform, $this->searchmodifieddate);
+        $this->check_if_option_isset('searchmodifieddate2', $mform, $this->searchmodifieddate2);
+
+        $mform->addGroup(
+            $creationdate,
+            "formatchoices_date",
+            $strcreationdate,
+            '<div style="padding: 5px" ></div>',
+            false
+        );
+        $mform->addGroup(
+            $mofificationdate,
+            "formatchoices_dates",
+            $strmodificationdate,
+            '<div style="padding: 5px" ></div>',
+            false
+        );
         $mform->addElement('submit', 'submitbutton', $strsubmitbuttontext);
 
-        $this->buttons_actions_and_requirements();
+        $PAGE->requires->js_call_amd("local_questionfinder/buttonsAction", "buttons_actions_and_requirements", array());
+
         // Unsetting all search options when checkbox for the search in the question bank is unset.
-        if (!isset($_GET['checkbox_QB'])) {
+        if (!($this->checkbox)) {
             $mform->setDefault('searchtext', '');
             $mform->setDefault('format', "");
             $mform->setDefault('format_name', "");
@@ -266,24 +308,24 @@ class local_questionfinder_question_bank_search_condition  extends core_question
             $mform->setDefault('checkbox_modified', "");
 
             $this->where = '';
-            echo html_writer::script("
-                (document.getElementById('id_checkbox_QB')).checked='';
-                (document.getElementById('id_checkbox_QB')).value=0;
-            ");
+
+            $PAGE->requires->js_call_amd(
+                "local_questionfinder/buttonsAction",
+                "checkboxactivityunchecked",
+                array()
+            );
 
             $mform->updateElementAttr('submitbutton', array('disabled' => 'disabled', 'style' => " opacity: 0.6;"));
         }
 
-        echo  '<br>';
-        echo  '<br>';
+        echo  '<br/>';
+        echo  '<br/>';
 
         return $mform->display();
     }
 
     // SQL QUERIES.
-    /**
-     * Searching for creator, modifier or question name in the Question Bank.
-     */
+
     private function init() {
 
         global $DB;
@@ -293,39 +335,35 @@ class local_questionfinder_question_bank_search_condition  extends core_question
         $this->params['searchtext1'] = '%' . $DB->sql_like_escape($this->searchtext) . '%';
         $this->params['searchtext2'] = $this->params['searchtext1'];
 
-        if (isset($_GET['format'])) {
-            if ($_GET['format'] == "questiontext") {
-                $this->where .= " OR ( q.id IN (SELECT question FROM {question_answers} qa WHERE " .
-                    $DB->sql_like('answer', ':searchtext3', false) . ') )';
-                $this->params['searchtext3'] = $this->params['searchtext1'];
-                $_GET['format_name'] = '';
-            } else {
-
-                if ($_GET['format'] == "author" && isset($_GET['format_name'])) {
+        if (($this->format)) {
+            if (($this->formatname)) {
+                if ($this->format == "author") {
                     $this->where .= " OR ( q.createdby IN (SELECT u.id FROM {user} u WHERE " .
-                        $DB->sql_like($_GET['format_name'], ':searchtext3', false)  . ') )';
+                        $DB->sql_like($this->formatname, ':searchtext3', false)  . ') )';
                     $this->params['searchtext3'] = $this->params['searchtext1'];
-                } else if ($_GET['format'] == "modifiedby" && isset($_GET['format_name'])) {
+                } else if ($this->format == "modifiedby") {
                     $this->where .= " OR ( q.modifiedby IN (SELECT u.id FROM {user} u WHERE " .
-                        $DB->sql_like($_GET['format_name'], ':searchtext3', false) . ') )';
+                        $DB->sql_like($this->formatname, ':searchtext3', false) . ') )';
                     $this->params['searchtext3'] = $this->params['searchtext1'];
+                }
+            } else {   // QUESTIONTEXTFIELD.
+                if ($this->format == "questiontext") {
+                    $this->where .= " OR ( q.id IN (SELECT question FROM {question_answers} qa WHERE " .
+                        $DB->sql_like('answer', ':searchtext3', false) . ') )';
+                    $this->params['searchtext3'] = $this->params['searchtext1'];
+                    $this->formatname = '';
                 }
             }
         }
     }
 
-    /**
-     * Searching for the creation- or modification - date.
-     */
     private function initdate() {
-        global $CFG;
-        global $DB;
 
-        $this->searchcreatedate = $this->date_formatter(implode("-", $_GET['searchcreatedate']));
-        $this->params['searchtext4'] = $this->searchcreatedate;
+        $searchcreatedatetmp = $this->date_formatter(implode("-", $this->searchcreatedate));
+        $this->params['searchtext4'] = $searchcreatedatetmp;
 
-        $this->searchmodifieddate = $this->date_formatter(implode("-", $_GET['searchmodifieddate']));
-        $this->params['searchtext5'] = $DB->sql_like_escape($this->searchmodifieddate);
+        $searchmodifieddatetmp = $this->date_formatter(implode("-", $this->searchmodifieddate));
+        $this->params['searchtext5'] = $searchmodifieddatetmp;
 
         $strerrormessagedate = get_string('errormessagedate', 'local_questionfinder');
         if (!($this->searchcreatedate && $this->searchmodifieddate)) {
@@ -335,88 +373,59 @@ class local_questionfinder_question_bank_search_condition  extends core_question
             return;
         }
 
-        if (strval(($CFG->dbtype)) == "pgsql") {
-            if (isset($_GET['searchcreatedate']) && $_GET['format'] == 'creation') {
+        if (($this->searchcreatedate) && $this->format == 'creation') {
 
-                $this->where .= "  SELECT to_char(to_timestamp(q.timecreated)::date,'yyyy-mm-dd') IN
-                 (SELECT to_char(to_timestamp(q.timecreated)::date,'yyyy-mm-dd') FROM {question} q WHERE " .
-                $DB->sql_like("to_char(to_timestamp(q.timecreated)::date,'yyyy-mm-dd')", ':searchcreatedate', false)  . ')';
+            $time1 = strtotime($searchcreatedatetmp);
+            $time2 = strtotime($searchcreatedatetmp . "+1day");
 
-                $this->params['searchcreatedate'] = $this->params['searchtext4'];
-            } else if (isset($_GET['searchmodifieddate']) && $_GET['format'] == 'modified') {
+            $this->where .= "SELECT q.timecreated IN ( SELECT q.timecreated
+            FROM {question} q WHERE timecreated >= $time1 AND timecreated < $time2)";
 
-                $this->where .= " SELECT to_char(to_timestamp(q.timemodified)::date,'yyyy-mm-dd') IN
-                 (SELECT to_char(to_timestamp(q.timemodified)::date,'yyyy-mm-dd') FROM {question} q WHERE " .
-                $DB->sql_like("to_char(to_timestamp(q.timemodified)::date,'yyyy-mm-dd')", ':searchmodifieddate', false)  . ' )';
+            $this->params['searchcreatedate'] = $this->params['searchtext4'];
+        } else if (($this->searchmodifieddate) && $this->format == 'modified') {
 
-                $this->params['searchmodifieddate'] = $this->params['searchtext5'];
-            }
-        } else {
-            if (isset($_GET['searchcreatedate'])  && $_GET['format'] == 'creation') {
-                $this->where .= "FROM_UNIXTIME(q.timecreated, '%Y-%m-%d') = '" . $this->params['searchtext4'] ."'";
-                $this->params['searchcreatedate'] = $this->params['searchtext4'];
-            } else if (isset($_GET['searchmodifieddate']) && $_GET['format'] == 'modified') {
-                $this->where .= "FROM_UNIXTIME(q.timemodified, '%Y-%m-%d') = '" . $this->params['searchtext5'] ."'";
-                $this->params['searchmodifieddate'] = $this->params['searchtext5'];
-            }
+            $time1 = strtotime($searchmodifieddatetmp);
+            $time2 = strtotime($searchmodifieddatetmp . "+1day");
+
+            $this->where .= "SELECT q.timemodified IN ( SELECT q.timemodified
+            FROM {question} q WHERE timemodified >= $time1 AND timemodified < $time2)";
+
+            $this->params['searchmodifieddate'] = $this->params['searchtext5'];
         }
     }
 
-    /**
-     * Searhcing for daterange for creation- or modification - date.
-     */
     private function initdaterange() {
-        global $CFG;
-        global $DB;
 
-        $this->searchcreatedate = $this->date_formatter(implode("-", $_GET['searchcreatedate']));
-        $this->params['searchtext4'] = $DB->sql_like_escape($this->searchcreatedate);
-        $this->searchcreatedate2 = $this->date_formatter(implode("-", $_GET['searchcreatedate2']));
-        $this->params['searchtext6'] = $DB->sql_like_escape($this->searchcreatedate2);
+        $searchcreatedatetmp = $this->date_formatter(implode("-", $this->searchcreatedate));
+        $this->params['searchtext4'] = $searchcreatedatetmp;
+        $searchcreatedatetmp2 = $this->date_formatter(implode("-",  $this->searchcreatedate2));
+        $this->params['searchtext6'] = $searchcreatedatetmp2;
 
-        $this->searchmodifieddate = $this->date_formatter(implode("-", $_GET['searchmodifieddate']));
-        $this->params['searchtext5'] = $DB->sql_like_escape($this->searchmodifieddate);
-        $this->searchmodifieddate2 = $this->date_formatter(implode("-", $_GET['searchmodifieddate2']));
-        $this->params['searchtext7'] = $DB->sql_like_escape($this->searchmodifieddate2);
+        $searchmodifieddatetmp = $this->date_formatter(implode("-", $this->searchmodifieddate));
+        $this->params['searchtext5'] = $searchmodifieddatetmp;
+        $searchmodifieddatetmp2 = $this->date_formatter(implode("-", $this->searchmodifieddate2));
+        $this->params['searchtext7'] = $searchmodifieddatetmp2;
 
-        if (strval(($CFG->dbtype)) == "pgsql") {
-            if (isset($_GET['checkbox_creation'])) {
+        if (($this->checkboxcreation)) {
 
-                $this->where .= " SELECT to_char(to_timestamp(q.timecreated)::date,'yyyy-mm-dd')
-                 IN ( SELECT to_char(to_timestamp(q.timecreated)::date,'yyyy-mm-dd') FROM {question} q ) WHERE
-                 to_char(to_timestamp(q.timecreated)::date,'yyyy-mm-dd') >= '" . $this->params["searchtext4"] .
-                "' AND to_char(to_timestamp(q.timecreated)::date,'yyyy-mm-dd') <= '" . $this->params["searchtext6"] . "' ";
+            $time1 = strtotime($searchcreatedatetmp);
+            $time2 = strtotime($searchcreatedatetmp2 . "+1day");
 
-                $this->params['searchcreatedate'] = $this->params['searchtext4'];
-                $this->params['searchcreatedate2'] = $this->params['searchtext6'];
-            } else if (isset($_GET['checkbox_modified'])) {
+            $this->where .= "SELECT q.timecreated IN ( SELECT q.timecreated
+            FROM {question} q WHERE timecreated >= $time1 AND timecreated < $time2)";
 
-                $this->where .= "  SELECT to_char(to_timestamp(q.timemodified)::date,'yyyy-mm-dd')
-                 IN (SELECT to_char(to_timestamp(q.timemodified)::date,'yyyy-mm-dd') FROM {question} q ) WHERE
-                 to_char(to_timestamp(q.timemodified)::date,'yyyy-mm-dd') >= '" . $this->params["searchtext5"] .
-                "' AND to_char(to_timestamp(q.timemodified)::date,'yyyy-mm-dd') <= '" . $this->params['searchtext7'] . "'";
+            $this->params['searchcreatedate'] = $this->params['searchtext4'];
+            $this->params['searchcreatedate2'] = $this->params['searchtext6'];
+        } else if (($this->checkboxmodified)) {
 
-                $this->params['searchmodifieddate'] = $this->params['searchtext5'];
-                $this->params['searchmodifieddate2'] = $this->params['searchtext7'];
-            }
-        } else {
+            $time1 = strtotime($searchmodifieddatetmp);
+            $time2 = strtotime($searchmodifieddatetmp2 . "+1day");
 
-            if (isset($_GET['checkbox_creation'])) {
-                $this->searchmodifieddate = '';
-                $this->searchmodifieddate2 = '';
-                $this->where .= "FROM_UNIXTIME(q.timecreated, '%Y-%m-%d') >= '" . $this->params["searchtext4"] .
-                "' AND FROM_UNIXTIME(q.timecreated, '%Y-%m-%d') <= '" . $this->params["searchtext6"] . "'";
+            $this->where .= "SELECT q.timemodified IN ( SELECT q.timemodified
+            FROM {question} q WHERE timemodified >= $time1 AND timemodified < $time2)";
 
-                $this->params['searchcreatedate'] = $this->params['searchtext4'];
-                $this->params['searchcreatedate2'] = $this->params['searchtext6'];
-            } else if (isset($_GET['checkbox_modified'])) {
-
-                $this->where .= "FROM_UNIXTIME(q.timemodified, '%Y-%m-%d') >= '" . $this->params["searchtext5"]  .
-                "' AND FROM_UNIXTIME(q.timemodified, '%Y-%m-%d') <= '" . $this->params["searchtext7"]  . "'";
-
-                $this->params['searchmodifieddate'] = $this->params['searchtext5'];
-                $this->params['searchmodifieddate2'] = $this->params['searchtext7'];
-            }
+            $this->params['searchmodifieddate'] = $this->params['searchtext5'];
+            $this->params['searchmodifieddate2'] = $this->params['searchtext7'];
         }
     }
     /**
@@ -447,96 +456,11 @@ class local_questionfinder_question_bank_search_condition  extends core_question
      * @param string $element the name of the element to be used.
      * @param MoodleQuickForm $mform the form used for the search in the question bank.
      */
-    public function check_if_option_isset($element, $mform) {
-        if (!isset($_GET[$element])) {
-
+    public function check_if_option_isset($element, $mform, $elem) {
+        if (!$elem) {
             $mform->setDefault($element, '');
         } else {
-
-            $mform->setDefault($element, $_GET[$element]);
+            $mform->setDefault($element, $elem);
         }
-    }
-    /**
-     * Creates interactive useage of all buttons in the form
-     */
-    public function buttons_actions_and_requirements() {
-        echo html_writer::script("
-        	window.addEventListener('load', function(event) {
-                (document.getElementById('id_submitbutton')).addEventListener('click', function(e){
-                    for (a in document.getElementsByName('format')){
-                        if(document.getElementsByName('format')[a].checked){
-                            if(document.getElementsByName('format')[a].value == 'creation'
-                            || document.getElementsByName('format')[a].value == 'modified'
-                            || document.getElementsByName('format')[a].value == 'questiontext' ){
-
-                                for (name in document.getElementsByName('format_name')){
-                                    if((document.getElementsByName('format_name')[name]).required){
-                                        (document.getElementsByName('format_name')[name]).required='';
-                                    }
-                                }
-                                if(document.getElementsByName('format')[a].value != 'questiontext' ){
-                                    document.getElementById('id_searchtext').required = '';
-                                }
-                            }
-                        }
-                    }
-                })
-                for (a in document.getElementsByName('format')){
-                    if((document.getElementsByName('format')[a]).value == 'creation'
-                        || (document.getElementsByName('format')[a]).value == 'modified'
-                        || (document.getElementsByName('format')[a]).value == 'questiontext' ){
-                            (document.getElementsByName('format')[a]).addEventListener('click', function(e){
-                                for (name in document.getElementsByName('format_name')){
-                                    if((document.getElementsByName('format_name')[name]).checked){
-                                        (document.getElementsByName('format_name')[name]).checked='';
-                                    }
-                                }
-                            })
-                            if ((document.getElementsByName('format')[a]).value == 'creation') {
-                                (document.getElementsByName('format')[a]).addEventListener('click', function(e) {
-                                    (document.getElementById('id_checkbox_modified')).value = '0';
-                                    (document.getElementById('id_checkbox_modified')).checked = '';
-                                })
-                            }else if ((document.getElementsByName('format')[a]).value == 'modified') {
-                                (document.getElementsByName('format')[a]).addEventListener('click', function(e) {
-                                    (document.getElementById('id_checkbox_creation')).value = '0';
-                                    (document.getElementById('id_checkbox_creation')).checked = '';
-                                })
-                            }else if ((document.getElementsByName('format')[a]).value == 'questiontext') {
-                                (document.getElementsByName('format')[a]).addEventListener('click', function(e) {
-                                    (document.getElementById('id_checkbox_modified')).value = '0';
-                                    (document.getElementById('id_checkbox_modified')).checked = '';
-                                    (document.getElementById('id_checkbox_creation')).value = '0';
-                                    (document.getElementById('id_checkbox_creation')).checked = '';
-                                })
-                            }
-                    } else if (document.getElementsByName('format')[a].value == 'author'
-                        || document.getElementsByName('format')[a].value == 'modifiedby'
-                        || document.getElementsByName('format')[a].value == 'questiontext' ) {
-                        (document.getElementsByName('format')[a]).addEventListener('click', function(e) {
-                            document.getElementById('id_searchtext').required = 'required';
-                            (document.getElementById('id_checkbox_modified')).value = '0';
-                            (document.getElementById('id_checkbox_modified')).checked = '';
-                            (document.getElementById('id_checkbox_creation')).value = '0';
-                            (document.getElementById('id_checkbox_creation')).checked = '';
-                        })
-                        if(document.getElementsByName('format')[a].value != 'questiontext') {
-                            for (name in document.getElementsByName('format_name')) {
-                                (document.getElementsByName('format_name')[name]).required = 'required';
-                                console.log();
-                                if ((document.getElementsByName('format_name')[name]).value) {
-                                    (document.getElementsByName('format_name')[name]).addEventListener('click', function(e) {
-                                        (document.getElementById('id_checkbox_modified')).value = '0';
-                                        (document.getElementById('id_checkbox_modified')).checked = '';
-                                        (document.getElementById('id_checkbox_creation')).value = '0';
-                                        (document.getElementById('id_checkbox_creation')).checked = '';
-                                    })
-                                }
-                            }
-                        }
-                    }
-                }
-            })
-        ");
     }
 }

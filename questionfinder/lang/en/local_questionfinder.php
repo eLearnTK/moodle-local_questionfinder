@@ -16,27 +16,32 @@
 
 /**
  * Strings for component 'local_questionfinder', language 'en'
- *
- * @package   local_questionfinder
- * @copyright 2019 onwards Tobias Kutzner
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    local_questionfinder
+ * @copyright  2013 Ray Morris
+ * @copyright  2019 onwards Tobias Kutzner <Tobias.Kutzner@b-tu.de>
+ * @copyright  2020 onwards Pedro Rojas
+ * @copyright  2020 onwards Eleonora Kostova <Eleonora.Kostova@b-tu.de>
+ * @copyright  based on 2012 work by Felipe Carasso (http://carassonet.org)
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname'] = 'Question Finder';
-$string['searchbytext'] = 'Search term:';
+$string['pluginname'] = 'Search Questions';
+$string['searchbytext'] = 'Search by text: ';
 $string['username'] = 'Username';
 $string['firstname'] = 'Firstname';
 $string['lastname'] = 'Lastname';
 $string['author'] = ' Importer of the questions:';
-$string['questiontext'] = ' Name of the question (Questiontext)';
-$string['lastmodifiedby'] = ' Last change is made by:';
-$string['searchbydate'] = 'Date search';
+$string['questiontext'] = ' Name of the question (Questiontext):';
+$string['lastmodifiedby'] = 'Last modified by:';
+$string['searchbydate'] = 'Date search:';
 $string['creationdate'] = 'Creation (import):';
 $string['modificationdate'] = 'Last change:';
-$string['from'] = ' from: ';
-$string['to'] = ' to: ';
+$string['from'] = 'from: ';
+$string['to'] = 'to: ';
 $string['errormessagedate'] = 'Error: select either creation date or Modification date';
 $string['searchinquestionbank'] = ' Search in the Question Bank';
 $string['applysearch'] = 'Apply search to: ';
 $string['choosetypeofnamesearch'] = 'Choose type of name option: ';
 $string['submitbuttontext'] = 'Search';
+
+

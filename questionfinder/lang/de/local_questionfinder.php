@@ -16,28 +16,31 @@
 
 /**
  * Strings for component 'local_questionfinder', language 'de'
- *
- * @package   local_questionfinder
- * @copyright 2019 onwards Tobias Kutzner
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    local_questionfinder
+ * @copyright  2013 Ray Morris
+ * @copyright  2019 onwards Tobias Kutzner <Tobias.Kutzner@b-tu.de>
+ * @copyright  2020 onwards Pedro Rojas
+ * @copyright  2020 onwards Eleonora Kostova <Eleonora.Kostova@b-tu.de>
+ * @copyright  based on 2012 work by Felipe Carasso (http://carassonet.org)
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-header('Content-Type: text/html; charset=ISO-8859-1');
 
 $string['pluginname'] = 'Fragen Suche';
 $string['searchbytext'] = 'Suchbegriff:';
 $string['username'] = 'Username';
 $string['firstname'] = 'Vorname';
 $string['lastname'] = 'Nachname';
-$string['author'] = ' Importeur der Fragen:';
-$string['questiontext'] = ' Bezeichnung der Frage (Fragetext)';
+$string['author'] = 'Importeur der Fragen:';
+$string['questiontext'] = 'Bezeichnung der Frage (Fragetext):';
 $string['lastmodifiedby'] = ' Letzte Änderung erfolgt durch:';
-$string['searchbydate'] = ' Datumssuche';
+$string['searchbydate'] = ' Datumssuche:';
 $string['creationdate'] = ' Erstellung (Import):';
-$string['modificationdate'] = 'Letzte Änderung:';
-$string['from'] = ' von: ';
-$string['to'] = ' bis :';
+$string['modificationdate'] = 'Letze Änderung:';
+$string['from'] = 'von: ';
+$string['to'] = 'bis: ';
 $string['errormessagedate'] = 'Fehler: Erstellungsdatum oder Änderungsdatum eingeben!';
 $string['searchinquestionbank'] = 'Suchen in der Fragendatenbank';
 $string['applysearch'] = 'Suche anwenden auf: ';
 $string['choosetypeofnamesearch'] = 'Wählen Sie eine Namenoption';
 $string['submitbuttontext'] = 'Suchen';
+
