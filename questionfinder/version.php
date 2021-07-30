@@ -22,14 +22,13 @@
  * @copyright  2019 onwards Tobias Kutzner <Tobias.Kutzner@b-tu.de>
  * @copyright  2020 onwards Pedro Rojas
  * @copyright  2020 onwards Eleonora Kostova <Eleonora.Kostova@b-tu.de>
- * @copyright  based on 2012 work by Felipe Carasso (http://carassonet.org)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2021062314;
-$plugin->release   = '3.2.0';
+$plugin->version   = 2021072815;
+$plugin->release   = '1.1.0';
 $plugin->maturity  = MATURITY_STABLE;
 $plugin->requires  = 2018051700;
 $plugin->component = 'local_questionfinder';

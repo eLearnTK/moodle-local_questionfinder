@@ -1,4 +1,3 @@
-<?php
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -13,9 +12,11 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+/* jshint node: true, browser: false */
+/* eslint-env node */
 
 /**
- * Strings for component 'local_questionfinder', language 'en'
+ *
  * @package    local_questionfinder
  * @copyright  2013 Ray Morris
  * @copyright  2019 onwards Tobias Kutzner <Tobias.Kutzner@b-tu.de>
@@ -23,24 +24,10 @@
  * @copyright  2020 onwards Eleonora Kostova <Eleonora.Kostova@b-tu.de>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+ "use strict";
 
-$string['pluginname'] = 'Search Questions';
-$string['searchbytext'] = 'Search by text: ';
-$string['username'] = 'Username';
-$string['firstname'] = 'Firstname';
-$string['lastname'] = 'Lastname';
-$string['author'] = ' Importer of the questions:';
-$string['questiontext'] = ' Name of the question (Questiontext):';
-$string['lastmodifiedby'] = 'Last modified by:';
-$string['searchbydate'] = 'Date search:';
-$string['creationdate'] = 'Creation (import):';
-$string['modificationdate'] = 'Last change:';
-$string['from'] = 'from: ';
-$string['to'] = 'to: ';
-$string['errormessagedate'] = 'Error: select either creation date or Modification date';
-$string['searchinquestionbank'] = ' Search in the Question Bank';
-$string['applysearch'] = 'Apply search to: ';
-$string['choosetypeofnamesearch'] = 'Choose type of name option: ';
-$string['submitbuttontext'] = 'Search';
-
-
+ module.exports = function (grunt) {
+     // We need to include the core Moodle grunt file too, otherwise we can't run tasks like "amd".
+     require("grunt-load-gruntfile")(grunt);
+     grunt.loadGruntfile("../../Gruntfile.js");
+ };

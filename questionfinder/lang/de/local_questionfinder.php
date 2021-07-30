@@ -21,7 +21,6 @@
  * @copyright  2019 onwards Tobias Kutzner <Tobias.Kutzner@b-tu.de>
  * @copyright  2020 onwards Pedro Rojas
  * @copyright  2020 onwards Eleonora Kostova <Eleonora.Kostova@b-tu.de>
- * @copyright  based on 2012 work by Felipe Carasso (http://carassonet.org)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 

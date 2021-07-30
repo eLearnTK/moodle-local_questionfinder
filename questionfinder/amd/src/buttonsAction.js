@@ -22,7 +22,6 @@
  * @copyright  2019 onwards Tobias Kutzner <Tobias.Kutzner@b-tu.de>
  * @copyright  2020 onwards Pedro Rojas
  * @copyright  2020 onwards Eleonora Kostova <Eleonora.Kostova@b-tu.de>
- * @copyright  based on 2012 work by Felipe Carasso (http://carassonet.org)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 define([], function () {
@@ -30,10 +29,10 @@ define([], function () {
         /**
          * Implements buttons' reaction.
          *
-         * @method buttons_actions_and_requirements
+         * @method buttonsActions
          */
-        buttons_actions_and_requirements: function () {
-            document.getElementById("id_submitbutton").addEventListener("click", function (e) {
+        buttonsActions: function () {
+            document.getElementById("id_submitbutton").addEventListener("click", function () {
                 for (let a in document.getElementsByName("format")) {
                     if (document.getElementsByName("format")[a].checked) {
                         if (document.getElementsByName("format")[a].value == "creation" ||
@@ -77,7 +76,7 @@ define([], function () {
                     if (document.getElementsByName("format")[a].value == "creation" ||
                         document.getElementsByName("format")[a].value == "modified" ||
                         document.getElementsByName("format")[a].value == "questiontext") {
-                        document.getElementsByName("format")[a].addEventListener("click", function (e) {
+                        document.getElementsByName("format")[a].addEventListener("click", function () {
                             for (let name in document.getElementsByName("format_name")) {
                                 if (document.getElementsByName("format_name")[name].checked) {
                                     document.getElementsByName("format_name")[name].checked = "";
@@ -85,21 +84,21 @@ define([], function () {
                             }
                         });
                         if (document.getElementsByName("format")[a].value == "creation") {
-                            document.getElementsByName("format")[a].addEventListener("click", function (e) {
+                            document.getElementsByName("format")[a].addEventListener("click", function () {
                                 document.getElementById("id_checkbox_modified").value = "0";
                                 document.getElementById("id_checkbox_modified").checked = "";
                                 document.getElementById("id_checkbox_metadatacreation").value = "0";
                                 document.getElementById("id_checkbox_metadatacreation").checked = "";
                             });
                         } else if (document.getElementsByName("format")[a].value == "modified") {
-                            document.getElementsByName("format")[a].addEventListener("click", function (e) {
+                            document.getElementsByName("format")[a].addEventListener("click", function () {
                                 document.getElementById("id_checkbox_creation").value = "0";
                                 document.getElementById("id_checkbox_creation").checked = "";
                                 document.getElementById("id_checkbox_metadatacreation").value = "0";
                                 document.getElementById("id_checkbox_metadatacreation").checked = "";
                             });
                         } else if (document.getElementsByName("format")[a].value == "questiontext") {
-                            document.getElementsByName("format")[a].addEventListener("click", function (e) {
+                            document.getElementsByName("format")[a].addEventListener("click", function () {
                                 document.getElementById("id_searchtext").required = "required";
                                 document.getElementById("id_checkbox_modified").value = "0";
                                 document.getElementById("id_checkbox_modified").checked = "";
@@ -112,7 +111,7 @@ define([], function () {
                     } else if (document.getElementsByName("format")[a].value == "author" ||
                         document.getElementsByName("format")[a].value == "modifiedby" ||
                         document.getElementsByName("format")[a].value == "questiontext") {
-                        document.getElementsByName("format")[a].addEventListener("click", function (e) {
+                        document.getElementsByName("format")[a].addEventListener("click", function () {
                             document.getElementById("id_searchtext").required = "required";
                             document.getElementById("id_checkbox_modified").value = "0";
                             document.getElementById("id_checkbox_modified").checked = "";
@@ -131,7 +130,7 @@ define([], function () {
 
                             for (let name in document.getElementsByName("format_name")) {
                                 if (document.getElementsByName("format_name")[name].value) {
-                                    document.getElementsByName("format_name")[name].addEventListener("click", function (e) {
+                                    document.getElementsByName("format_name")[name].addEventListener("click", function () {
                                         document.getElementById("id_checkbox_modified").value = "0";
                                         document.getElementById("id_checkbox_modified").checked = "";
                                         document.getElementById("id_checkbox_creation").value = "0";
@@ -173,8 +172,8 @@ define([], function () {
                                   document.getElementById("id_checkbox_creation").value = "0";
                                   document.getElementById("id_checkbox_creation").checked = "";
                             }
-                            let form_value = document.getElementsByName("format")[a].value;
-                            document.getElementsByName("format")[a].addEventListener("click", function (e) {
+                            let formValue = document.getElementsByName("format")[a].value;
+                            document.getElementsByName("format")[a].addEventListener("click", function () {
                                 for (let name in document.getElementsByName("format_name")) {
                                     if (document.getElementsByName("format_name")[name].checked) {
                                         document.getElementsByName("format_name")[name].checked = "";
@@ -183,7 +182,7 @@ define([], function () {
                                         document.getElementsByName("format_name")[name].required = "";
                                     }
                                 }
-                                if (form_value == "metadatacreation") {
+                                if (formValue == "metadatacreation") {
                                     document.getElementById("id_searchtext").required = "";
                                 } else {
                                     document.getElementById("id_checkbox_metadatacreation").value = "0";
@@ -213,7 +212,7 @@ define([], function () {
         },
         /**
          * Redirect user to a specific page.
-         *
+         * @param {String} url
          * @method replacelocationurl
          */
         replacelocationurl: function (url) {

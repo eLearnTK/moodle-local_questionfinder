@@ -21,7 +21,6 @@
  * @copyright  2019 onwards Tobias Kutzner <Tobias.Kutzner@b-tu.de>
  * @copyright  2020 onwards Pedro Rojas
  * @copyright  2020 onwards Eleonora Kostova <Eleonora.Kostova@b-tu.de>
- * @copyright  based on 2012 work by Felipe Carasso (http://carassonet.org)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -40,11 +39,23 @@ function local_questionfinder_get_question_bank_search_conditions($caller) {
     return array(new local_questionfinder_question_bank_search_condition($caller));
 }
 
+/**
+ * Helper class for filtering/searching questions.
+ *
+ * See also {@link question_bank_view::init_search_conditions()}.
+ * @copyright 2013 Ray Morris
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class local_questionfinder_question_bank_search_condition  extends core_question\bank\search\condition {
-    protected $tags;
+    /** @var string SQL fragment to add to the where clause. */
     protected $where;
+
+    /** @var array query param used in where. */
     protected $params;
 
+    /**
+     * Contructor.
+     */
     public function __construct() {
         global $PAGE;
 
@@ -121,14 +132,27 @@ class local_questionfinder_question_bank_search_condition  extends core_question
         }
     }
 
+    /**
+     * Return an SQL fragment to be ANDed into the WHERE clause to filter which questions are shown.
+     * @return string SQL fragment. Must use named parameters.
+     */
     public function where() {
         return $this->where;
     }
 
+    /**
+     * Return parameters to be bound to the above WHERE clause fragment.
+     * @return array parameter name => value.
+     */
     public function params() {
         return $this->params;
     }
 
+    /**
+     * Display GUI for selecting criteria for searching/filtering questions.
+     *
+     * @return string HTML form fragment
+     */
     public function display_options_adv() {
         global $DB, $PAGE;
 
@@ -297,7 +321,7 @@ class local_questionfinder_question_bank_search_condition  extends core_question
         );
         $mform->addElement('submit', 'submitbutton', $strsubmitbuttontext);
 
-        $PAGE->requires->js_call_amd("local_questionfinder/buttonsAction", "buttons_actions_and_requirements", array());
+        $PAGE->requires->js_call_amd("local_questionfinder/buttonsAction", "buttonsActions", array());
 
         // Unsetting all search options when checkbox for the search in the question bank is unset.
         if (!($this->checkbox)) {
@@ -326,6 +350,9 @@ class local_questionfinder_question_bank_search_condition  extends core_question
 
     // SQL QUERIES.
 
+    /**
+     * Search questions in the DB by name.
+     */
     private function init() {
 
         global $DB;
@@ -357,6 +384,9 @@ class local_questionfinder_question_bank_search_condition  extends core_question
         }
     }
 
+    /**
+     * Search questions in the DB by date.
+     */
     private function initdate() {
 
         $searchcreatedatetmp = $this->date_formatter(implode("-", $this->searchcreatedate));
@@ -394,6 +424,9 @@ class local_questionfinder_question_bank_search_condition  extends core_question
         }
     }
 
+    /**
+     * Search questions in the DB by date range.
+     */
     private function initdaterange() {
 
         $searchcreatedatetmp = $this->date_formatter(implode("-", $this->searchcreatedate));
@@ -455,6 +488,7 @@ class local_questionfinder_question_bank_search_condition  extends core_question
      * Checking if form option has a value.
      * @param string $element the name of the element to be used.
      * @param MoodleQuickForm $mform the form used for the search in the question bank.
+     * @param mixed $elem the form element.
      */
     public function check_if_option_isset($element, $mform, $elem) {
         if (!$elem) {
