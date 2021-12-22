@@ -50,7 +50,7 @@ The plugin uses the default SQL Moodle database by adding extra conditions to th
  
  
 ## Moodle plugin link:
-[https://github.com/eLearnTK/moodle_local_questionfinder](https://moodle.org/plugins/moodle_local_questionfinder)
+[https://github.com/eLearnTK/moodle-local_questionfinder](https://moodle.org/plugins/local_questionfinder)
 
 Maintaned by: **Tobias Kutzner, Ray Morris** 
 
