@@ -15,33 +15,29 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'local_questionfinder', language 'en'
+ * Run the code checker from the web.
+ *
  * @package    local_questionfinder
  * @copyright  2013 Ray Morris
  * @copyright  2019 onwards Tobias Kutzner <Tobias.Kutzner@b-tu.de>
  * @copyright  2020 onwards Pedro Rojas
  * @copyright  2020 onwards Eleonora Kostova <Eleonora.Kostova@b-tu.de>
+ * @copyright  2018 Andreas Grabs <moodle@grabs-edv.de>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['pluginname'] = 'Search Questions';
-$string['searchbytext'] = 'Search by text: ';
-$string['username'] = 'Username';
-$string['firstname'] = 'Firstname';
-$string['lastname'] = 'Lastname';
-$string['author'] = ' Importer of the questions:';
-$string['questiontext'] = ' Name of the question (Questiontext)';
-$string['lastmodifiedby'] = 'Last modified by:';
-$string['searchbydate'] = 'Date search:';
-$string['creationdate'] = 'Creation (import):';
-$string['modificationdate'] = 'Last change:';
-$string['from'] = 'from: ';
-$string['to'] = 'to: ';
-$string['errormessagedate'] = 'Error: select either creation date or Modification date';
-$string['searchinquestionbank'] = ' Search in the Question Bank';
-$string['applysearch'] = 'Apply search to: ';
-$string['choosetypeofnamesearch'] = 'Choose type of name option: ';
-$string['submitbuttontext'] = 'Search';
-$string['privacy:metadata'] = 'The Search Questions plugin does not store any personal data.';
+namespace local_questionfinder\privacy;
 
 
+// The local plugin questionfinder does not store any data.
+class provider implements \core_privacy\local\metadata\null_provider {
+
+    /**
+     * Get the language string identifier with the component's language
+     * file to explain why this plugin stores no data.
+     *
+     * @return  string
+     */
+    public static function get_reason() : string {
+        return 'privacy:metadata';
+    }
+}

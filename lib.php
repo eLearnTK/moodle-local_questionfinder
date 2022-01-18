@@ -56,7 +56,7 @@ class local_questionfinder_question_bank_search_condition  extends core_question
     /**
      * Contructor.
      */
-    public function __construct() {
+    public function __construct($caller) {
         global $PAGE;
 
         $this->serverurl = optional_param('REQUEST_URI', $_SERVER['REQUEST_URI'], PARAM_TEXT);
@@ -87,6 +87,44 @@ class local_questionfinder_question_bank_search_condition  extends core_question
                     "replacelocationurl",
                     array("url" => $this->serverurl)
                 );
+            }
+            $arguments = file_get_contents('php://input');
+            $requests = json_decode($arguments, true);
+            if (!empty($requests)) {
+                $args = $requests[0]['args']['args'][0];
+                $querystring = preg_replace('/^\?/', '', $args['value']);
+                $params = [];
+                parse_str($querystring, $params);
+                if (!empty($params['checkbox_QB'])) {
+                    $this->checkbox = $params['checkbox_QB'];
+                }
+                if (!empty($params['searchtext'])) {
+                    $this->searchtext = $params['searchtext'];
+                }
+                if (!empty($params['format'])) {
+                    $this->format = $params['format'];
+                }
+                if (!empty($params['format_name'])) {
+                    $this->formatname = $params['format_name'];
+                }
+                if (!empty($params['checkbox_creation'])) {
+                    $this->checkboxcreation = $params['checkbox_creation'];
+                }
+                if (!empty($params['checkbox_modified'])) {
+                    $this->checkboxmodified = $params['checkbox_modified'];
+                }
+                if (!empty($params['searchcreatedate'])) {
+                    $this->searchcreatedate = $params['searchcreatedate'];
+                }
+                if (!empty($params['searchcreatedate2'])) {
+                    $this->searchcreatedate2 = $params['searchcreatedate2'];
+                }
+                if (!empty($params['searchmodifieddate'])) {
+                    $this->searchmodifieddate = $params['searchmodifieddate'];
+                }
+                if (!empty($params['searchmodifieddate2'])) {
+                    $this->searchmodifieddate2 = $params['searchmodifieddate2'];
+                }
             }
         } else {
             if (!(strpos($this->serverurl, "&qperpage=1000"))) {
@@ -155,7 +193,6 @@ class local_questionfinder_question_bank_search_condition  extends core_question
      */
     public function display_options_adv() {
         global $DB, $PAGE;
-
         $strsearchbytext = get_string('searchbytext', 'local_questionfinder');
         $strusername = get_string('username', 'local_questionfinder');
         $strfirstname = get_string('firstname', 'local_questionfinder');
@@ -340,6 +377,7 @@ class local_questionfinder_question_bank_search_condition  extends core_question
             );
 
             $mform->updateElementAttr('submitbutton', array('disabled' => 'disabled', 'style' => " opacity: 0.6;"));
+            $PAGE->requires->js_call_amd("local_questionfinder/buttonsAction", "disablesearchbuttons", array());
         }
 
         echo  '<br/>';

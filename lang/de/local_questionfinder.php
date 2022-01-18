@@ -30,7 +30,7 @@ $string['username'] = 'Username';
 $string['firstname'] = 'Vorname';
 $string['lastname'] = 'Nachname';
 $string['author'] = 'Importeur der Fragen:';
-$string['questiontext'] = 'Bezeichnung der Frage (Fragetext):';
+$string['questiontext'] = 'Bezeichnung der Frage (Fragetext)';
 $string['lastmodifiedby'] = ' Letzte Änderung erfolgt durch:';
 $string['searchbydate'] = ' Datumssuche:';
 $string['creationdate'] = ' Erstellung (Import):';
@@ -42,4 +42,5 @@ $string['searchinquestionbank'] = 'Suchen in der Fragendatenbank';
 $string['applysearch'] = 'Suche anwenden auf: ';
 $string['choosetypeofnamesearch'] = 'Wählen Sie eine Namenoption';
 $string['submitbuttontext'] = 'Suchen';
+$string['privacy:metadata'] = 'Das Plugin zur Fragensuche lagert keine personenbezogene Daten.';
 

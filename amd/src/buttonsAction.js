@@ -201,6 +201,16 @@ define([], function () {
             }
         },
         /**
+         * Disables the search buttons.
+         *
+         * @method disablesearchbuttons
+         */
+        disablesearchbuttons: function () {
+            for (let a in document.getElementsByClassName('w-100 m-0 p-0 border-0')) {
+                document.getElementsByClassName('w-100 m-0 p-0 border-0')[a].disabled = 'disabled';
+            }
+        },
+        /**
          * Disables the option of pages per page.
          *
          * @method hidepagging
