@@ -342,6 +342,12 @@ class local_questionfinder_question_bank_search_condition  extends core_question
         $this->check_if_option_isset('searchmodifieddate', $mform, $this->searchmodifieddate);
         $this->check_if_option_isset('searchmodifieddate2', $mform, $this->searchmodifieddate2);
 
+        // initialize de value of date_selector to 0 because if it doesnt, the default value is "", and calendartype_gregorian\structure->timestamp_to_date_array function expects an INT value
+        $mform->setDefault('searchcreatedate', 0);
+        $mform->setDefault('searchcreatedate2', 0);
+        $mform->setDefault('searchmodifieddate', 0);
+        $mform->setDefault('searchmodifieddate2', 0);
+        
         $mform->addGroup(
             $creationdate,
             "formatchoices_date",
